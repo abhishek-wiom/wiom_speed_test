@@ -102,42 +102,44 @@ class FlutterInternetSpeedTest {
 
         if (onProgress != null) onProgress(100, downloadResult);
         if (onDownloadComplete != null) onDownloadComplete(downloadResult);
-
-        final startUploadTimeStamp = DateTime.now().millisecondsSinceEpoch;
-        FlutterInternetSpeedTestPlatform.instance.startUploadTesting(
-          onDone: (double transferRate, SpeedUnit unit) {
-            final uploadDuration =
-                DateTime.now().millisecondsSinceEpoch - startUploadTimeStamp;
-            final uploadResult = TestResult(TestType.upload, transferRate, unit,
-                durationInMillis: uploadDuration);
-
-            if (onProgress != null) onProgress(100, uploadResult);
-            if (onUploadComplete != null) onUploadComplete(uploadResult);
-
-            onCompleted(downloadResult, uploadResult);
+         onCompleted(downloadResult, downloadResult);
             _isTestInProgress = false;
             _isCancelled = false;
-          },
-          onProgress: (double percent, double transferRate, SpeedUnit unit) {
-            final uploadProgressResult =
-                TestResult(TestType.upload, transferRate, unit);
-            if (onProgress != null) {
-              onProgress(percent, uploadProgressResult);
-            }
-          },
-          onError: (String errorMessage, String speedTestError) {
-            if (onError != null) onError(errorMessage, speedTestError);
-            _isTestInProgress = false;
-            _isCancelled = false;
-          },
-          onCancel: () {
-            if (onCancel != null) onCancel();
-            _isTestInProgress = false;
-            _isCancelled = false;
-          },
-          fileSize: fileSizeInBytes,
-          testServer: uploadTestServer!,
-        );
+        // final startUploadTimeStamp = DateTime.now().millisecondsSinceEpoch;
+        // FlutterInternetSpeedTestPlatform.instance.startUploadTesting(
+        //   onDone: (double transferRate, SpeedUnit unit) {
+        //     final uploadDuration =
+        //         DateTime.now().millisecondsSinceEpoch - startUploadTimeStamp;
+        //     final uploadResult = TestResult(TestType.upload, transferRate, unit,
+        //         durationInMillis: uploadDuration);
+
+        //     if (onProgress != null) onProgress(100, uploadResult);
+        //     if (onUploadComplete != null) onUploadComplete(uploadResult);
+
+        //     onCompleted(downloadResult, uploadResult);
+        //     _isTestInProgress = false;
+        //     _isCancelled = false;
+        //   },
+        //   onProgress: (double percent, double transferRate, SpeedUnit unit) {
+        //     final uploadProgressResult =
+        //         TestResult(TestType.upload, transferRate, unit);
+        //     if (onProgress != null) {
+        //       onProgress(percent, uploadProgressResult);
+        //     }
+        //   },
+        //   onError: (String errorMessage, String speedTestError) {
+        //     if (onError != null) onError(errorMessage, speedTestError);
+        //     _isTestInProgress = false;
+        //     _isCancelled = false;
+        //   },
+        //   onCancel: () {
+        //     if (onCancel != null) onCancel();
+        //     _isTestInProgress = false;
+        //     _isCancelled = false;
+        //   },
+        //   fileSize: fileSizeInBytes,
+        //   testServer: uploadTestServer!,
+        // );
       },
       onProgress: (double percent, double transferRate, SpeedUnit unit) {
         final downloadProgressResult =
