@@ -1,8 +1,6 @@
 name: flutter_internet_speed_test
 description: A Flutter plugin to test internet download and upload speed.
 version: 1.5.0
-# authors: [ Shahbaz Akhtar <meshahbaz.akhtar@gmail.com> ]
-homepage: https://github.com/shaz-tech/flutter_internet_speed_test
 
 environment:
   sdk: '>=3.0.3 <4.0.0'
