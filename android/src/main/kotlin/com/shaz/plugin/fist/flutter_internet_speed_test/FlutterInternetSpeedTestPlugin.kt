@@ -16,6 +16,10 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.util.concurrent.TimeUnit
+import android.content.Intent
+import android.net.Uri
+import java.lang.Exception
+import android.telephony.TelephonyManager
 
 /** FlutterInternetSpeedTestPlugin */
 class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -45,7 +49,6 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
         this.result = result
         if (call.method == "callNumber") {
             number = call.argument("number")
-            Log.d("Caller", "Message")
             number = number!!.replace("#".toRegex(), "%23")
             if (!number!!.startsWith("tel:")) {
                 number = String.format("tel:%s", number)
@@ -61,6 +64,23 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
             }
         }
     }
+
+    private fun callNumber(number: String?): Boolean {
+        return try {
+            val intent = Intent(if (isTelephonyEnabled) Intent.ACTION_CALL else Intent.ACTION_VIEW)
+            intent.data = Uri.parse(number)
+            activity.startActivity(intent)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private val isTelephonyEnabled: Boolean
+        get() {
+            val tm = activity.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            return tm.phoneType != TelephonyManager.PHONE_TYPE_NONE
+        }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         activity = null
