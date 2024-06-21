@@ -4,9 +4,7 @@ import 'package:flutter_internet_speed_test/src/test_result.dart';
 import 'callbacks_enum.dart';
 import 'flutter_internet_speed_test_platform_interface.dart';
 import 'models/server_selection_response.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 typedef DefaultCallback = void Function();
 typedef ResultCallback = void Function(TestResult download, TestResult upload);
 typedef TestProgressCallback = void Function(double percent, TestResult data);
@@ -30,16 +28,6 @@ class FlutterInternetSpeedTest {
   FlutterInternetSpeedTest._private();
 
   bool isTestInProgress() => _isTestInProgress;
-
-  Future<bool?> callNumber(String number) async {
-    MethodChannel _channel = MethodChannel('com.shaz.plugin.fist/method');
-    return await _channel.invokeMethod(
-      'callNumber',
-      <String, Object>{
-        'number': number,
-      },
-    );
-  }
 
   Future<void> startTesting({
     required ResultCallback onCompleted,

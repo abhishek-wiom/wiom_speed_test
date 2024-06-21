@@ -16,10 +16,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.util.concurrent.TimeUnit
-import android.content.Intent
-import android.net.Uri
-import java.lang.Exception
-import android.telephony.TelephonyManager
 
 /** FlutterInternetSpeedTestPlugin */
 class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -42,59 +38,19 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
             MethodChannel(flutterPluginBinding.binaryMessenger, "com.shaz.plugin.fist/method")
         methodChannel.setMethodCallHandler(this)
     }
-    private var number: String? = null
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         print("FlutterInternetSpeedTestPlugin: onMethodCall: ${call.method}")
         this.result = result
-        if (call.method == "callNumber") {
-            number = call.argument("number")
-            number = number!!.replace("#".toRegex(), "%23")
-            if (!number!!.startsWith("tel:")) {
-                number = String.format("tel:%s", number)
-            }
-            result.success(callNumber(number))
-        } else {
-            when (call.method) {
-                "startListening" -> mapToCall(result, call.arguments)
-                "cancelListening" -> cancelListening(call.arguments, result)
-                "toggleLog" -> toggleLog(call.arguments)
-                "cancelTest" -> cancelTasks(call.arguments, result)
-                else -> result.notImplemented()
-            }
+        when (call.method) {
+            "startListening" -> mapToCall(result, call.arguments)
+            "cancelListening" -> cancelListening(call.arguments, result)
+            "toggleLog" -> toggleLog(call.arguments)
+            "cancelTest" -> cancelTasks(call.arguments, result)
+            else -> result.notImplemented()
+
         }
     }
-
-    override fun onAttachedToActivity(activityPluginBinding: ActivityPluginBinding) {
-        this.setActivityPluginBinding(activityPluginBinding)
-    }
-
-    private fun callNumber(number: String?): Boolean {
-        return try {
-            val intent = Intent(if (isTelephonyEnabled) Intent.ACTION_CALL else Intent.ACTION_VIEW)
-            intent.data = Uri.parse(number)
-            activity.startActivity(intent)
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-    private var activityPluginBinding: ActivityPluginBinding? = null
-
-    fun setActivityPluginBinding(activityPluginBinding: ActivityPluginBinding) {
-        this.activityPluginBinding = activityPluginBinding
-        activityPluginBinding.addRequestPermissionsResultListener(this)
-    }
-
-    private val isTelephonyEnabled: Boolean
-        get() {
-            val tm = activity.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-            return tm.phoneType != TelephonyManager.PHONE_TYPE_NONE
-        }
-
-    private val activity: Activity
-        get() = activityPluginBinding!!.activity
-
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         activity = null
