@@ -20,7 +20,6 @@ import android.content.Intent
 import android.net.Uri
 import java.lang.Exception
 import android.telephony.TelephonyManager
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 /** FlutterInternetSpeedTestPlugin */
 class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
