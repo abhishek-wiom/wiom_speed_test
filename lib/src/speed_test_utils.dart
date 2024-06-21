@@ -6,7 +6,6 @@ Future<bool> isInternetAvailable() async {
       await connectivity.checkConnectivity();
   return (connectivityResult.indexWhere((element) =>
           element == ConnectivityResult.mobile ||
-          element == ConnectivityResult.wifi ||
-          element == ConnectivityResult.ethernet) !=
+          element == ConnectivityResult.wifi) !=
       -1);
 }
