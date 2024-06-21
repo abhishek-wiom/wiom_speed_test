@@ -20,6 +20,7 @@ import android.content.Intent
 import android.net.Uri
 import java.lang.Exception
 import android.telephony.TelephonyManager
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 /** FlutterInternetSpeedTestPlugin */
 class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -65,6 +66,10 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
         }
     }
 
+    override fun onAttachedToActivity(activityPluginBinding: ActivityPluginBinding) {
+        this.setActivityPluginBinding(activityPluginBinding)
+    }
+
     private fun callNumber(number: String?): Boolean {
         return try {
             val intent = Intent(if (isTelephonyEnabled) Intent.ACTION_CALL else Intent.ACTION_VIEW)
@@ -75,12 +80,22 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
             false
         }
     }
+    private var activityPluginBinding: ActivityPluginBinding? = null
+
+    fun setActivityPluginBinding(activityPluginBinding: ActivityPluginBinding) {
+        this.activityPluginBinding = activityPluginBinding
+        activityPluginBinding.addRequestPermissionsResultListener(this)
+    }
 
     private val isTelephonyEnabled: Boolean
         get() {
             val tm = activity.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             return tm.phoneType != TelephonyManager.PHONE_TYPE_NONE
         }
+
+    private val activity: Activity
+        get() = activityPluginBinding!!.activity
+
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         activity = null
