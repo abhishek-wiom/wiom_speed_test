@@ -4,7 +4,9 @@ import 'package:flutter_internet_speed_test/src/test_result.dart';
 import 'callbacks_enum.dart';
 import 'flutter_internet_speed_test_platform_interface.dart';
 import 'models/server_selection_response.dart';
+import 'dart:async';
 
+import 'package:flutter/services.dart';
 typedef DefaultCallback = void Function();
 typedef ResultCallback = void Function(TestResult download, TestResult upload);
 typedef TestProgressCallback = void Function(double percent, TestResult data);

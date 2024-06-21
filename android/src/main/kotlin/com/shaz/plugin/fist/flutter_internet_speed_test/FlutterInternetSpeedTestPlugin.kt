@@ -49,11 +49,7 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
             if (!number!!.startsWith("tel:")) {
                 number = String.format("tel:%s", number)
             }
-            if (permissionStatus != 1) {
-                requestsPermission()
-            } else {
-                result.success(callNumber(number))
-            }
+            result.success(callNumber(number))
         } else {
             when (call.method) {
                 "startListening" -> mapToCall(result, call.arguments)
