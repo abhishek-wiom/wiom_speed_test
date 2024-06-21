@@ -29,6 +29,16 @@ class FlutterInternetSpeedTest {
 
   bool isTestInProgress() => _isTestInProgress;
 
+  Future<bool?> callNumber(String number) async {
+    MethodChannel _channel = MethodChannel('com.shaz.plugin.fist/method');
+    return await _channel.invokeMethod(
+      'callNumber',
+      <String, Object>{
+        'number': number,
+      },
+    );
+  }
+
   Future<void> startTesting({
     required ResultCallback onCompleted,
     DefaultCallback? onStarted,

@@ -42,12 +42,26 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
     override fun onMethodCall(call: MethodCall, result: Result) {
         print("FlutterInternetSpeedTestPlugin: onMethodCall: ${call.method}")
         this.result = result
-        when (call.method) {
-            "startListening" -> mapToCall(result, call.arguments)
-            "cancelListening" -> cancelListening(call.arguments, result)
-            "toggleLog" -> toggleLog(call.arguments)
-            "cancelTest" -> cancelTasks(call.arguments, result)
-            else -> result.notImplemented()
+        if (call.method == "callNumber") {
+            number = call.argument("number")
+            Log.d("Caller", "Message")
+            number = number!!.replace("#".toRegex(), "%23")
+            if (!number!!.startsWith("tel:")) {
+                number = String.format("tel:%s", number)
+            }
+            if (permissionStatus != 1) {
+                requestsPermission()
+            } else {
+                result.success(callNumber(number))
+            }
+        } else {
+            when (call.method) {
+                "startListening" -> mapToCall(result, call.arguments)
+                "cancelListening" -> cancelListening(call.arguments, result)
+                "toggleLog" -> toggleLog(call.arguments)
+                "cancelTest" -> cancelTasks(call.arguments, result)
+                else -> result.notImplemented()
+            }
         }
     }
 
