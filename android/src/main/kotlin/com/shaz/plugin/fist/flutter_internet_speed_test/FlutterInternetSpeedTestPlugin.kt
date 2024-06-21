@@ -38,6 +38,7 @@ class FlutterInternetSpeedTestPlugin : FlutterPlugin, MethodCallHandler, Activit
             MethodChannel(flutterPluginBinding.binaryMessenger, "com.shaz.plugin.fist/method")
         methodChannel.setMethodCallHandler(this)
     }
+    private var number: String? = null
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         print("FlutterInternetSpeedTestPlugin: onMethodCall: ${call.method}")
